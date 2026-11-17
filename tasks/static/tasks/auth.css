@@ -1,0 +1,93 @@
+
+/* Page background */
+body {
+    margin: 0;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    font-family: Arial, sans-serif;
+    background-color: #f4f6fb;
+    color: #252b42;
+}
+
+/* Page heading */
+h1 {
+    text-align: center;
+    color: #252b42;
+    margin-bottom: 20px;
+}
+
+/* Login and Register form */
+form {
+    width: 350px;
+    max-width: calc(100vw - 80px);
+    background-color: white;
+    padding: 30px;
+    border-radius: 14px;
+    box-shadow: 0 4px 18px rgba(0, 0, 0, 0.08);
+}
+
+/* Labels */
+label {
+    display: block;
+    margin-top: 15px;
+    margin-bottom: 8px;
+    font-weight: bold;
+}
+
+/* Input fields */
+input[type="text"],
+input[type="password"] {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid #dce0e8;
+    border-radius: 8px;
+    box-sizing: border-box;
+    outline: none;
+}
+
+input:focus {
+    border-color: #5265e8;
+}
+
+/* Submit button */
+button {
+    width: 100%;
+    margin-top: 20px;
+    padding: 13px;
+    background-color: #5265e8;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-size: 15px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+button:hover {
+    background-color: #394bc4;
+}
+
+/* Links */
+a {
+    color: #5265e8;
+    text-decoration: none;
+}
+
+a:hover {
+    text-decoration: underline;
+}
+
+/* Messages */
+ul {
+    list-style: none;
+    padding: 0;
+}
+
+li {
+    color: #dc2626;
+    text-align: center;
+    margin: 8px 0;
+}

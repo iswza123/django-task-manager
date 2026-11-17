@@ -1,0 +1,204 @@
+
+{% load static %}
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>My Task Manager</title>
+    <link rel="stylesheet" href="{% static 'tasks/dashboard.css' %}">
+</head>
+
+<body>
+
+    <div class="dashboard-container">
+
+        <!-- Welcome Section -->
+        <div class="welcome-section">
+            <h1>My Task Manager</h1>
+            <p>Welcome, {{ request.user.username }}!</p>
+            <a href="{% url 'logout' %}" class="logout-link">Logout</a>
+        </div>
+
+        <!-- Dashboard Statistics -->
+        <div class="stats-container">
+
+            <div class="stat-card total-card">
+                <h3>Total Tasks</h3>
+                <p>{{ total_tasks }}</p>
+            </div>
+
+            <div class="stat-card completed-card">
+                <h3>Completed Tasks</h3>
+                <p>{{ completed_tasks }}</p>
+            </div>
+
+            <div class="stat-card pending-card">
+                <h3>Pending Tasks</h3>
+                <p>{{ pending_tasks }}</p>
+            </div>
+
+        </div>
+
+        <!-- Add Task Section -->
+        <div class="task-form">
+            <h2>Add a New Task</h2>
+
+            <form method="POST" action="{% url 'add_task' %}">
+                {% csrf_token %}
+
+                <label>Task Title:</label>
+                <input type="text" name="title"
+                    placeholder="Enter task title" required>
+
+                <label>Description:</label>
+                <textarea name="description"
+                    placeholder="Enter task description" required></textarea>
+
+                <label>Due Date:</label>
+                <input type="date" name="due_date">
+
+                <label>Priority:</label>
+                <select name="priority">
+                    <option value="Low">Low</option>
+                    <option value="Medium" selected>Medium</option>
+                    <option value="High">High</option>
+                </select>
+
+                <button type="submit">+ Add Task</button>
+            </form>
+        </div>
+
+        <!-- Search and Priority Filter Section -->
+        <div class="task-form">
+
+            <h2>My Tasks</h2>
+
+            <form method="GET" action="{% url 'task_list' %}">
+
+                <label>Search Tasks:</label>
+                <input
+                    type="text"
+                    name="search"
+                    placeholder="Search tasks by title..."
+                    value="{{ search_query }}"
+                >
+
+                <label>Filter by Priority:</label>
+                <select name="priority">
+
+                    <option value=""
+                        {% if not priority_query %}selected{% endif %}>
+                        All Priorities
+                    </option>
+
+                    <option value="High"
+                        {% if priority_query == 'High' %}selected{% endif %}>
+                        High Priority
+                    </option>
+
+                    <option value="Medium"
+                        {% if priority_query == 'Medium' %}selected{% endif %}>
+                        Medium Priority
+                    </option>
+
+                    <option value="Low"
+                        {% if priority_query == 'Low' %}selected{% endif %}>
+                        Low Priority
+                    </option>
+
+                </select>
+
+                <button type="submit">Apply Filter</button>
+
+                <a href="{% url 'task_list' %}">Clear Filters</a>
+
+            </form>
+
+        </div>
+
+        <!-- Task List -->
+        <div class="task-list">
+
+            {% for task in tasks %}
+
+            <div class="task-card">
+
+                <h3>{{ task.title }}</h3>
+
+                <p>{{ task.description }}</p>
+
+                <!-- Due Date -->
+                <p>
+                    <strong>Due Date:</strong>
+
+                    {% if task.due_date %}
+                        {{ task.due_date|date:"d M Y" }}
+                    {% else %}
+                        Not set
+                    {% endif %}
+                </p>
+
+                <!-- Priority -->
+                <p>
+                    <strong>Priority:</strong>
+                    {{ task.priority }}
+                </p>
+
+                <!-- Completion Status -->
+                {% if task.completed %}
+
+                    <p class="completed">Completed ✅</p>
+
+                {% else %}
+
+                    <p class="pending">Pending</p>
+
+                    <form method="POST"
+                        action="{% url 'complete_task' task.id %}">
+
+                        {% csrf_token %}
+
+                        <button type="submit">
+                            Mark as Completed
+                        </button>
+
+                    </form>
+
+                {% endif %}
+
+                <br>
+
+                <!-- Edit Task -->
+                <a href="{% url 'edit_task' task.id %}"
+                    class="edit-btn">
+                    Edit Task
+                </a>
+
+                <!-- Delete Task -->
+                <form method="POST"
+                    action="{% url 'delete_task' task.id %}">
+
+                    {% csrf_token %}
+
+                    <button type="submit" class="delete-btn">
+                        Delete Task
+                    </button>
+
+                </form>
+
+            </div>
+
+            {% empty %}
+
+            <div class="task-card">
+                <p>No tasks found. Add your first task!</p>
+            </div>
+
+            {% endfor %}
+
+        </div>
+
+    </div>
+
+</body>
+</html>
